@@ -1,36 +1,57 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# U Macros
 
-## Getting Started
+A mobile web app for University of Utah students to track calories, protein, carbs and fat
+using the real nutrition data from campus dining menus.
 
-First, run the development server:
+- **Menus**: pick a dining location and meal, tap a food, choose servings, add it to today.
+- **Today**: daily totals against your goals; flip back to earlier days.
+- **Custom**: log anything that isn't on a dining menu.
+- **Goals**: set your daily calorie and macro targets.
+
+Logs and goals are saved in the phone's browser. There are no accounts yet, so data doesn't sync between devices.
+
+## Where the menu data comes from
+
+U of U dining is run by Chartwells, which publishes menus and nutrition at
+[dineoncampus.com/utah](https://dineoncampus.com/utah). The app reads that data on the server
+(`src/lib/dineoncampus.ts`) and caches it for an hour. Dine On Campus has no official public API,
+so if it changes, that one file is what needs fixing.
+
+Check that the data source works:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm run check-menu
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+It prints the dining locations and a sample item with its nutrients.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Run it on your computer
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Install [Node.js](https://nodejs.org) (version 20 or newer).
+2. In this folder, run:
+   ```bash
+   npm install
+   npm run dev
+   ```
+3. Open http://localhost:3000. To see it at phone size, use your browser's device toolbar.
 
-## Learn More
+## Put it online (free)
 
-To learn more about Next.js, take a look at the following resources:
+1. Push this repo to GitHub.
+2. Sign in at [vercel.com](https://vercel.com) with GitHub, click **Add New → Project**, pick this repo, click **Deploy**.
+3. Every push to `main` redeploys automatically.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+On an iPhone, open the site in Safari, tap Share → **Add to Home Screen** and it opens like an app.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Project layout
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+src/app/page.tsx          Today screen
+src/app/menu/page.tsx     Dining menu browser
+src/app/add/page.tsx      Custom food form
+src/app/goals/page.tsx    Goals form
+src/app/api/              Server routes that fetch menus from Dine On Campus
+src/lib/dineoncampus.ts   Reads and cleans up the Dine On Campus data
+src/lib/storage.ts        Saves the log and goals in the browser
+scripts/check-menu.mjs    Checks the live data source
+```
